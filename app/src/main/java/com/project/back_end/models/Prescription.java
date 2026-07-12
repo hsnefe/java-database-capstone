@@ -1,7 +1,53 @@
 package com.project.back_end.models;
 
+import org.springframework.data.mongodb.core.mapping.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+@Document(collection = "prescriptions")
 public class Prescription {
-
+  @Id
+  private String id;
+  @NotNull(message = "Patient name cannot be null")
+  @Size(min = 3, max = 100, message = "Patient name must be between 3 and 100 characters")
+  private String patientName;
+  @NotNull(message = "Appointment ID cannot be null")
+  private Long appointmentId;
+  @NotNull(message = "Medication cannot be null")
+  @Size(min = 3, max = 100, message = "Medication must be between 3 and 100 characters")
+  private String medication;
+  @NotNull(message = "Dosage cannot be null")
+  @Size(min = 3, max = 100, message = "Dosage must be between 3 and 100 characters")
+  private String dosage;
+  @NotNull(message = "Doctor notes cannot be null")
+  @Size(max = 200, message = "Doctor notes must be less than 200 characters")
+  private String doctorNotes;
+  public Prescription(String id, String patientName, Long appointmentId, String medication, String dosage, String doctorNotes){
+    this.id = id;
+    this.patientName = patientName;
+    this.appointmentId = appointmentId;
+    this.medication = medication;
+    this.dosage = dosage;
+    this.doctorNotes = doctorNotes;
+  }
+  public String getId(){
+    return id;
+  }
+  public String getPatientName(){
+    return patientName;
+  }
+  public Long getAppointmentId(){
+    return appointmentId;
+  }
+  public String getMedication(){
+    return medication;
+  }
+  public String getDosage(){
+    return dosage;
+  }
+  public String getDoctorNotes(){
+    return doctorNotes;
+  }
+}
   // @Document annotation:
 //    - Marks the class as a MongoDB document (a collection in MongoDB).
 //    - The collection name is specified as "prescriptions" to map this class to the "prescriptions" collection in MongoDB.

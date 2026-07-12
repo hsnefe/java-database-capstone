@@ -1,6 +1,57 @@
 package com.project.back_end.models;
+import jakarta.persistence.*;
+import jakarta.validation.*;
+import jakarta.validation.constraints.*;
+import java.util.List;
 
+@Entity
 public class Patient {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotNull(message = "Name cannot be null")
+    @Size(min = 3, max = 100, message = "Name must be between 3 and 100 characters")
+    private String name;
+    @NotNull(message = "Email cannot be null")
+    @Email(message = "Invalid email address")
+    private String email;
+    @NotNull(message = "Password cannot be null")
+    @Size(min = 6, message = "Password must be at least 6 characters")
+    private String password;
+    @NotNull(message = "Phone cannot be null")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Invalid phone number")
+    private String phone;
+    @NotNull(message = "Address cannot be null")
+    @Size(max = 255, message = "Address must be less than 255 characters")
+    private String address;
+    public Patient(Long id, String name, String email, String password, String phone, String address){
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.address = address;
+    }
+    public Long getId(){
+        return id;
+    }   
+    public String getName(){
+        return name;
+    }
+    public String getEmail(){
+        return email;
+    }
+    public String getPassword(){
+        return password;
+    }
+    public String getPhone(){
+        return phone;
+    }
+    public String getAddress(){
+        return address;
+    }
+    
+}
 // @Entity annotation:
 //    - Marks the class as a JPA entity, meaning it represents a table in the database.
 //    - Required for persistence frameworks (e.g., Hibernate) to map the class to a database table.

@@ -1,7 +1,60 @@
 package com.project.back_end.models;
 
-public class Appointment {
+import java.time.*;
 
+import jakarta.persistence.*;
+import jakarta.validation.*;
+import jakarta.validation.constraints.*;
+
+@Entity
+public class Appointment {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY);
+private Long id;
+@ManyToOne
+@NotNull(message = "Doctor cannot be null")
+private Doctor doctor;
+@ManyToOne
+@NotNull(message = "Patient cannot be null")
+private Patient patient;
+@NotNull(message = "Appointment time cannot be null")
+@Future(message = "Appointment time must be in the future")
+private LocalDateTime appointmentTime;
+@NotNull(message = "Status cannot be null")
+@Min(value = 0, message = "Status must be 0 or 1")
+@Max(value = 1, message = "Status must be 0 or 1")
+private int status;
+public Appointment(Long id, Doctor doctor, Patient patient, LocalDateTime appointmentTime, int status){
+    this.id = id;
+    this.doctor = doctor;
+    this.patient = patient;
+    this.appointmentTime = appointmentTime;
+    this.status = status;
+}
+public Long getId(){
+    return id;
+}
+public Doctor getDoctor(){
+    return doctor;
+}
+public Patient getPatient(){
+    return patient;
+}
+public LocalDateTime getAppointmentTime(){
+    return appointmentTime;
+}
+public int getStatus(){
+    return status;
+}
+public LocalDateTime getEndTime(){
+    return appointmentTime.plusHours(1);
+}
+public LocalDate getAppointmentDate(){
+    return appointmentTime.toLocalDate();
+}
+public LocalTime getAppointmentTimeOnly(){
+    return appointmentTime.toLocalTime();
+}
   // @Entity annotation:
 //    - Marks the class as a JPA entity, meaning it represents a table in the database.
 //    - Required for persistence frameworks (e.g., Hibernate) to map the class to a database table.

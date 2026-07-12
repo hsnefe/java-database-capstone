@@ -1,11 +1,37 @@
 package com.project.back_end.models;
 
+import jakarta.annotation.Generated;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
 public class Admin {
 
 // @Entity annotation:
 //    - Marks the class as a JPA entity, which means it represents a table in the database.
 //    - It is required for persistence frameworks like Hibernate to map the class to a database table.
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY);
+private Long id;
 
+@NotNull(message = "Username cannot be null")
+private String username;
+@NotNull(message = "Password cannot be null")
+private String password;
+public Admin(Long id, String username, String password){
+    this.id = id;
+    this.username = username;
+    this.password = password;
+}
+public Long getId(){
+    return id;
+}
+public String getUsername(){
+    return username;
+}
+public String getPassword(){
+    return password;
+}
 // 1. 'id' field:
 //    - Type: private Long
 //    - Description: 
