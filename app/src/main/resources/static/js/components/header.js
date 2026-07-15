@@ -1,3 +1,37 @@
+function renderHeader() {
+  if (window.location.pathname.endsWith("/")) {
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("token");
+  }
+  else {
+    const headerDiv = document.getElementById("header");
+    const role = localStorage.getItem("userRole");
+    const token = localStorage.getItem("token");
+    let headerContent = `<header class="header">
+      <div class="logo-section">
+        <img src="../assets/images/logo/logo.png" alt="Hospital CRM Logo" class="logo-img">
+        <span class="logo-title">Hospital CMS</span>
+      </div>
+    </header>`;
+    if (role === "admin") {
+      headerContent += `<button id="addDocBtn" class="adminBtn" onclick="openModal('addDoctor')">Add Doctor</button>`;
+    }
+    else if (role === "doctor") {
+      headerContent += `<button class="adminBtn"  onclick="selectRole('doctor')">Home</button>`;
+    }
+    else if (role === "patient") {
+      headerContent += `<button id="patientLogin" class="adminBtn">Login</button>`;
+      headerContent += `<button id="patientSignup" class="adminBtn">Sign Up</button>`;
+    }
+    else if (role === "loggedPatient") {
+      headerContent += `<button id="home" class="adminBtn" onclick="window.location.href='/pages/loggedPatientDashboard.html'">Home</button>`;
+      headerContent += `<button id="patientAppointments" class="adminBtn" onclick="window.location.href='/pages/patientAppointments.html'">Appointments</button>`;
+      headerContent += `<a href="#" onclick="logoutPatient()">Logout</a>`;
+    }
+  }
+  headerDiv.innerHTML = headerContent;
+  attachHeaderButtonListeners();
+}
 /*
   Step-by-Step Explanation of Header Section Rendering
 

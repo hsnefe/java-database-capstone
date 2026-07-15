@@ -1,5 +1,47 @@
 <!-- doctorDashboard.html -->
-
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Doctor Dashboard</title>
+        <link rel="stylesheet" th:href="@{/assets/css/doctorDashboard.css}">
+        <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+        <link rel="stylesheet" th:href="@{/assets/css/adminDashboard.css}">
+        <link rel="icon" type="image/png" th:href="@{/assets/images/logo/logo.png}">
+        <script th:src="@{/js/render.js}" defer></script>
+        <script th:src="@{/js/util.js}" defer></script>
+        <script th:src="@{/js/header.js}" defer></script>
+        <script th:src="@{/js/footer.js}" defer></script>
+        <script th:src="@{/js/patientServices.js}" defer></script>
+        <script th:src="@{/js/doctorDashboard.js}" defer></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="wrapper">
+                <div id="header"></div>
+                <div class="main-content">
+                    <div class="search-bar">
+                        <input type="text" id="searchBar" class="searchBar" placeholder="Search Bar for custom output" />
+                    </div>
+                    <div class="filter-dropdowns">
+                        <button> Today's Appointments </button>
+                        <input type="date" id="datePicker" class="datePicker" />
+                        <table id="patientTable"></table>
+                        <tbody id="patientTableBody"></tbody>
+                        <tr>
+                            <th> Patient ID </th>
+                            <th> Name </th>
+                            <th> Phone </th>
+                            <th> Email </th>
+                            <th> Prescription </th>
+                        </tr>
+                        </tbody>
+                        <div id="footer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
 <!-- 
 Step-by-Step Explanation of `doctorDashboard.html`
 This file defines the Doctor Dashboard interface, allowing doctors to view and manage their patient appointments, search records, and access patient prescriptions.

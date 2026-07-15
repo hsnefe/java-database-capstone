@@ -1,5 +1,92 @@
-/* this is the style sheet file for index.htlm  */
+border{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  height: 100%;
+}
+.wrapper{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+h2{
+  font-size: 48px;
+  font-weight: bold;
+  color: #003e3e;
+  margin-bottom: 50px;
+  font-family: 'Alegreya', 'Roboto', sans-serif;
+}
+button{
+  background-color: #015c5d;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+.main-content{
+  background-image: url('../../images/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.modal{
+  display: none;
+  position: fixed;
 
+  justify-content: center;
+  align-items: center;
+}
+#close-btn {
+  background: crimson;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#modal-body{
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+}
+#close-btn:hover {
+  background-color: #c0392b;
+  transform: scale(1.1);
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #333;
+}
+.footer {
+  display: flex;
+  justify-content: space-around;
+}
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .footer {
+      flex-direction: column;
+      gap: 20px;
+  }
+}
 /* 
 **Global Reset (`*`)**
 

@@ -1,3 +1,22 @@
+function renderFooter() {
+  const footer = document.getElementById('footer');
+  footer.innerHTML = '';
+
+  const footerContent = `
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-logo">
+          <img src="../assets/images/logo/logo.png" alt="Hospital CMS Logo">
+          <p>© Copyright 2025. All Rights Reserved by Hospital CMS.</p>
+        </div>
+      </div>
+    </footer>
+  `;
+
+  footer.innerHTML = footerContent;
+}
+
+renderFooter();
 /*
   Function to render the footer content into the page
       Select the footer element from the DOM

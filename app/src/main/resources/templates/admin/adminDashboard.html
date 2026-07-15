@@ -1,5 +1,49 @@
 <!-- adminDashboard.html -->
-
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Admin Dashboard</title>
+        <link rel="stylesheet" th:href="@{/assets/css/adminDashboard.css}">
+        <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+        <script th:src="@{/js/render.js}" defer></script>
+        <script th:src="@{/js/util.js}" defer></script>
+        <script th:src="@{/js/header.js}" defer></script>
+        <script th:src="@{/js/footer.js}" defer></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="wrapper">
+                <div id="header"></div>
+                <main class="main-content">
+                    <div class="search-bar">
+                        <input type="text" id="searchBar" placeholder="search by doctor name" />
+                    </div>
+                    <div class="filter-dropdowns">
+                        <select id="time">
+                            <option value="">All Time</option>
+                        </select>
+                        <select id="specialty">
+                            <option value="">All Specialty</option>
+                        </select>
+                    </div>
+                    <div id="content"></div>
+                </main>
+                <div id="footer"></div>
+                <div class="modal">
+                    <div id="modal-body">
+                        <button id="close-btn">&times;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="modal" class="modal">
+            <span id="closeModal" class="close">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+        <script type="module" src="../js/services/adminDashboard.js" defer></script>
+        <script type="module" src="../js/components/doctorCard.js" defer></script>
+    </body>
+</html>
 <!-- 
 Step-by-Step Explanation of `adminDashboard.html`
 This file creates the Admin Dashboard interface for managing doctor-related data 

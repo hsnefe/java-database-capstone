@@ -1,4 +1,83 @@
 /* This is the style sheet for the doctorDashboard.html */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; font-family: Arial, sans-serif; }
+.wrapper{
+  display: flex;
+  flex-direction: vertical;
+  background-image: url('../../images/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+.main-content{
+  display: flex;
+  flex-direction: vertical;
+  background-image: url('../../images/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+.search-bar{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: #015c5d;
+}
+.search-bar:hover{
+  transform: scale(1.1);
+  background-color: #017d7e;
+}
+.filter-dropdowns{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: #015c5d;
+}
+.filter-dropdowns:hover{
+  transform: scale(1.1);
+  background-color: #017d7e;
+}
+.table{
+  width: 100%;
+  border-collapse: collapse;
+  tbody:nth-child(even){
+    background-color: #f9f9f959;
+  }
+  tbody:nth-child(odd){
+    background-color: #ffffffc0;
+  }
+  tbody:hover{
+    background-color: #015c5d39;
+  }
+}
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 20px;
+  }
+  .main-content {
+    padding: 20px;
+  }
+  .search-bar {
+    flex-direction: column;
+  }
+  .filter-dropdowns {
+    flex-direction: column;
+  }
+  .table {
+    width: 100%;
+  }
+  .table tbody {
+    width: 100%;
+  }
+  .table tbody th {
+    width: 100%;
+  }
+  .table tbody td {
+    width: 100%;
+  }
+}
 /* 
 **Table Header (`.table-header`)**
 
