@@ -1,3 +1,56 @@
+import {openModal} from './components/modals.js';
+import {getDoctors, filterDoctors, saveDoctor} from './services/doctorServices.js';
+import {createDoctorCard} from './components/doctorCard.js';
+window.onload = function() {
+  const addDoctorBtn = document.getElementById('addDocBtn');
+  if(addDocBtn) {
+    addDocBtn.addEventListener('click', () => openModal('addDoctor'));
+  }
+}
+function loadDoctorCards() {
+  getDoctors()
+  .then(doctors => {
+    const content = document.getElementById('content');
+    content.innerHTML = '';
+    doctors.forEach(doctor => createDoctorCard(doctor));
+    content.appendChild(doctorCards);
+  })
+  .catch(error => {
+    console.error("Failed to load doctor cards:", error);
+    alert("Failed to load doctor cards");
+  });
+}
+document.getElementById("searchBar").addEventListener("input", filterDoctorsOnChange);
+document.getElementById("filterTime").addEventListener("change", filterDoctorsOnChange);
+document.getElementById("filterSpecialty").addEventListener("change", filterDoctorsOnChange);
+function filterDoctorsOnChange() {
+  const searchValue = document.getElementById("searchBar").value.trim();
+  const timeValue = document.getElementById("filterTime").value;
+  const specialtyValue = document.getElementById("filterSpecialty").value;
+  filterDoctors(searchValue, timeValue, specialtyValue)
+  .then(doctors => {
+    const content = document.getElementById('content');
+    content.innerHTML = '';
+    doctors.forEach(doctor => createDoctorCard(doctor));
+  })
+  .catch(error => {
+    console.error("Failed to filter doctors:", error);
+    alert("Failed to filter doctors");
+  });
+}
+function renderDoctorCards(doctors) {
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+  doctors.forEach(doctor => createDoctorCard(doctor));
+}
+function adminAddDoctor() {
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const password = document.getElementById('password').value;
+  const specialty = document.getElementById('specialty').value;
+  const time = document.getElementById('time').value;
+}
 /*
   This script handles the admin dashboard functionality for managing doctors:
   - Loads all doctor cards

@@ -1,3 +1,49 @@
+import { openModal } from '../components/modals.js';
+import { API_BASE_URL } from '../config.js';
+const ADMIN_API = API_BASE_URL + 'admin/login';
+const DOCTOR_API = API_BASE_URL + 'doctor/login';
+window.onload = function() {
+  const adminBtn = document.getElementById('adminLogin');
+  if(adminBtn) {
+    adminBtn.addEventListener('click',() => {openModal('adminLogin')});
+  }
+  const doctorBtn = document.getElementById('doctorLogin');
+  if(doctorBtn) {
+    doctorBtn.addEventListener('click',() => {openModal('doctorLogin')});
+  }
+}
+function adminLoginHandler() {
+  const admin = {username, password};
+  fetch(ADMIN_API, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(admin),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(response.ok) {
+      const token = data.token;
+      localStorage.setItem('token', token);
+      selectRole('admin');
+    }
+  });
+}
+function doctorLoginHandler(){
+  const doctor = {email, password};
+  fetch(DOCTOR_API, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(doctor),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(response.ok) {
+      const token = data.token;
+      localStorage.setItem('token', token);
+      selectRole('doctor');
+    }
+  });
+}
 /*
   Import the openModal function to handle showing login popups/modals
   Import the base API URL from the config file
