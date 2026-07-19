@@ -105,6 +105,4 @@ public class Patient {
 //    - Standard getter and setter methods are provided for all fields: id, name, email, password, phone, and address.
 //    - These methods allow access and modification of the fields of the Patient class.
 
-  
 
-}

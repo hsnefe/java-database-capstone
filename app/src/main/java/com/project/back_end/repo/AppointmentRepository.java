@@ -1,7 +1,34 @@
 package com.project.back_end.repo;
-
-public interface AppointmentRepository  {
-
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.project.back_end.models.Appointment;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.time.LocalDateTime;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
+@Repository
+public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+   @Query("SELECT a FROM Appointment a LEFT JOIN FETCH a.doctor WHERE a.doctorId = :doctorId AND a.appointmentTime BETWEEN :start AND :end")
+   List<Appointment> findByDoctorIdAndAppointmentTimeBetween(Long doctorId, LocalDateTime start, LocalDateTime end);
+   @Query("SELECT a FROM Appointment a LEFT JOIN FETCH a.patient WHERE a.doctorId = :doctorId AND a.patient.name LIKE %:patientName% AND a.appointmentTime BETWEEN :start AND :end")
+   List<Appointment> findByDoctorIdAndPatient_NameContainingIgnoreCaseAndAppointmentTimeBetween(Long doctorId, String patientName, LocalDateTime start, LocalDateTime end);
+   @Modifying
+   @Transactional
+   @Query("DELETE FROM Appointment a WHERE a.doctorId = :doctorId")
+   void deleteAllByDoctorId(Long doctorId);
+   @Query("SELECT a FROM Appointment a WHERE a.patientId = :patientId")
+   List<Appointment> findByPatientId(Long patientId);
+   @Query("SELECT a FROM Appointment a WHERE a.patientId = :patientId AND a.status = :status ORDER BY a.appointmentTime ASC")
+    List<Appointment> findByPatient_IdAndStatusOrderByAppointmentTimeAsc(Long patientId, int status);
+    @Query("SELECT a FROM Appointment a WHERE a.doctor.name LIKE %:doctorName% AND a.patientId = :patientId")
+    List<Appointment> filterByDoctorNameAndPatientId(String doctorName, Long patientId);
+    @Query("SELECT a FROM Appointment a WHERE a.doctor.name LIKE %:doctorName% AND a.patientId = :patientId AND a.status = :status")
+    List<Appointment> filterByDoctorNameAndPatientIdAndStatus(String doctorName, Long patientId, int status);
+    @Modifying
+    @Transactional
+    @Query("UPDATE Appointment a SET a.status = :status WHERE a.id = :id")
+    void updateStatus(int status, long id);
    // 1. Extend JpaRepository:
 //    - The repository extends JpaRepository<Appointment, Long>, which gives it basic CRUD functionality.
 //    - The methods such as save, delete, update, and find are inherited without the need for explicit implementation.

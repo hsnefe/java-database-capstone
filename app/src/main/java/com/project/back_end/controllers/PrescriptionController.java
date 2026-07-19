@@ -1,7 +1,54 @@
 package com.project.back_end.controllers;
 
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.project.back_end.models.Prescription;
+import com.project.back_end.services.PrescriptionService;
+import com.project.back_end.services.Service;
+
+@RestController
+@RequestMapping("${api.path}prescription")
 public class PrescriptionController {
-    
+
+    private final PrescriptionService prescriptionService;
+    private final Service service;
+
+    public PrescriptionController(PrescriptionService prescriptionService, Service service) {
+        this.prescriptionService = prescriptionService;
+        this.service = service;
+    }
+
+    @PostMapping("/{token}")
+    public ResponseEntity<Map<String, String>> savePrescription(
+            @PathVariable String token,
+            @RequestBody Prescription prescription) {
+        ResponseEntity<Map<String, String>> validationResponse = service.validateToken(token, "doctor");
+        if (!validationResponse.getStatusCode().equals(HttpStatus.OK)) {
+            return validationResponse;
+        }
+        return prescriptionService.savePrescription(prescription);
+    }
+
+    @GetMapping("/{appointmentId}/{token}")
+    public ResponseEntity<?> getPrescription(
+            @PathVariable Long appointmentId,
+            @PathVariable String token) {
+        ResponseEntity<Map<String, String>> validationResponse = service.validateToken(token, "doctor");
+        if (!validationResponse.getStatusCode().equals(HttpStatus.OK)) {
+            return validationResponse;
+        }
+        return prescriptionService.getPrescription(appointmentId);
+    }
+
 // 1. Set Up the Controller Class:
 //    - Annotate the class with `@RestController` to define it as a REST API controller.
 //    - Use `@RequestMapping("${api.path}prescription")` to set the base path for all prescription-related endpoints.

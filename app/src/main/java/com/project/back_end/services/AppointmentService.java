@@ -1,6 +1,108 @@
 package com.project.back_end.services;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import com.project.back_end.repo.AppointmentRepository;
+import com.project.back_end.repo.PatientRepository;
+import com.project.back_end.repo.DoctorRepository;
+import com.project.back_end.services.TokenService;
+import com.project.back_end.DTO.AppointmentDTO;
+import com.project.back_end.models.Doctor;
+
+import jakarta.persistence.Entity;
+
+import org.springframework.transaction.annotation.Transactional;
+import com.project.back_end.models.Appointment;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+@Service
 public class AppointmentService {
+    private final AppointmentRepository appointmentRepository;
+    private final TokenService tokenService;
+    private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
+    public AppointmentService(AppointmentRepository appointmentRepository, TokenService tokenService, PatientRepository patientRepository, DoctorRepository doctorRepository) {
+        this.appointmentRepository = appointmentRepository;
+        this.tokenService = tokenService;
+        this.patientRepository = patientRepository;
+        this.doctorRepository = doctorRepository;
+    }
+    @Transactional
+    public int bookAppointment(Appointment appointment) {
+        try {
+            appointmentRepository.save(appointment);
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    @Transactional
+    public ResponseEntity<Map<String, String>> updateAppointment(Appointment appointment) {
+        Appointment existingAppointment = appointmentRepository.findById(appointment.getId()).orElse(null);
+        if(existingAppointment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Appointment not found"));
+        }
+        if(!existingAppointment.getPatient().getId().equals(appointment.getPatient().getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "You are not allowed to update this appointment"));
+        }
+        existingAppointment.setAppointmentTime(appointment.getAppointmentTime());
+        existingAppointment.setDoctor(appointment.getDoctor());
+        existingAppointment.setPatient(appointment.getPatient());
+        appointmentRepository.save(existingAppointment);
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Appointment updated successfully"));
+    }
+    @Transactional
+    public ResponseEntity<Map<String, String>> cancelAppointment(Long appointmentId) {
+        Appointment existingAppointment = appointmentRepository.findById(appointmentId).orElse(null);
+        if(existingAppointment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Appointment not found"));
+        }
+        appointmentRepository.delete(existingAppointment);
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Appointment cancelled successfully"));
+    }
+    @Transactional
+    public Map<String, Object> getAppointments(String pname, LocalDate date, String token) {
+        Map<String, Object> map = new HashMap<>();
+        String email = tokenService.extractEmail(token);
+        Doctor doctor = doctorRepository.findByEmail(email);
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+
+        List<Appointment> appointments;
+        if (pname == null || "null".equals(pname) || pname.isBlank()) {
+            appointments = appointmentRepository.findByDoctorIdAndAppointmentTimeBetween(
+                    doctor.getId(), startOfDay, endOfDay);
+        } else {
+            appointments = appointmentRepository
+                    .findByDoctorIdAndPatient_NameContainingIgnoreCaseAndAppointmentTimeBetween(
+                            doctor.getId(), pname, startOfDay, endOfDay);
+        }
+
+        List<AppointmentDTO> appointmentDTOs = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+            appointmentDTOs.add(new AppointmentDTO(
+                    appointment.getId(),
+                    appointment.getDoctor().getId(),
+                    appointment.getDoctor().getName(),
+                    appointment.getPatient().getId(),
+                    appointment.getPatient().getName(),
+                    appointment.getPatient().getEmail(),
+                    appointment.getPatient().getPhone(),
+                    appointment.getPatient().getAddress(),
+                    appointment.getAppointmentTime(),
+                    appointment.getStatus()));
+        }
+        map.put("appointments", appointmentDTOs);
+        return map;
+    }
 // 1. **Add @Service Annotation**:
 //    - To indicate that this class is a service layer class for handling business logic.
 //    - The `@Service` annotation should be added before the class declaration to mark it as a Spring service component.

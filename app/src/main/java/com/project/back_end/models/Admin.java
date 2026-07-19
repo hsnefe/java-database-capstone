@@ -11,7 +11,7 @@ public class Admin {
 //    - Marks the class as a JPA entity, which means it represents a table in the database.
 //    - It is required for persistence frameworks like Hibernate to map the class to a database table.
 @Id
-@GeneratedValue(strategy = GenerationType.IDENTITY);
+@GeneratedValue(strategy = GenerationType.IDENTITY)
 private Long id;
 
 @NotNull(message = "Username cannot be null")

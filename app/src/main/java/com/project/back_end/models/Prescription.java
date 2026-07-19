@@ -97,6 +97,3 @@ public class Prescription {
 // 8. Getters and Setters:
 //    - Standard getter and setter methods are provided for all fields: id, patientName, medication, dosage, doctorNotes, and appointmentId.
 //    - These methods allow access and modification of the fields of the Prescription class.
-
-
-}
