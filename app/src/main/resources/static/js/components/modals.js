@@ -102,3 +102,5 @@ export function openModal(type) {
     document.getElementById('doctorLoginBtn').addEventListener('click', window.doctorLoginHandler);
   }
 }
+
+window.openModal = openModal;
