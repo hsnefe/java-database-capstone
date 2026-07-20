@@ -1,11 +1,142 @@
 package com.project.back_end.controllers;
 
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.project.back_end.DTO.Login;
+import com.project.back_end.models.Doctor;
+import com.project.back_end.services.DoctorService;
+import com.project.back_end.services.Service;
+
+@RestController
+@RequestMapping("${api.path}doctor")
 public class DoctorController {
 
+    private final DoctorService doctorService;
+    private final Service service;
+
+    public DoctorController(DoctorService doctorService, Service service) {
+        this.doctorService = doctorService;
+        this.service = service;
+    }
+
+    @GetMapping("/availability/{user}/{doctorId}/{date}/{token}")
+    public ResponseEntity<?> getDoctorAvailability(
+            @PathVariable String user,
+            @PathVariable Long doctorId,
+            @PathVariable LocalDate date,
+            @PathVariable String token) {
+        ResponseEntity<Map<String, String>> validationResponse = service.validateToken(token, user);
+        if (!validationResponse.getStatusCode().equals(HttpStatus.OK)) {
+            return validationResponse;
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        List<String> availability = doctorService.getDoctorAvailability(doctorId, date);
+        map.put("availability", availability);
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getDoctors() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("doctors", doctorService.getDoctors());
+        return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("/{token}")
+    public ResponseEntity<Map<String, String>> saveDoctor(
+            @RequestBody Doctor doctor,
+            @PathVariable String token) {
+        ResponseEntity<Map<String, String>> validationResponse = service.validateToken(token, "admin");
+        if (!validationResponse.getStatusCode().equals(HttpStatus.OK)) {
+            return validationResponse;
+        }
+
+        Map<String, String> map = new HashMap<>();
+        int result = doctorService.saveDoctor(doctor);
+        if (result == 1) {
+            map.put("message", "Doctor added to db");
+            return ResponseEntity.status(HttpStatus.CREATED).body(map);
+        } else if (result == -1) {
+            map.put("message", "Doctor already exists");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(map);
+        }
+        map.put("message", "Some internal error occurred");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> doctorLogin(@RequestBody Login login) {
+        return doctorService.validateDoctor(login);
+    }
+
+    @PutMapping("/{token}")
+    public ResponseEntity<Map<String, String>> updateDoctor(
+            @RequestBody Doctor doctor,
+            @PathVariable String token) {
+        ResponseEntity<Map<String, String>> validationResponse = service.validateToken(token, "admin");
+        if (!validationResponse.getStatusCode().equals(HttpStatus.OK)) {
+            return validationResponse;
+        }
+
+        Map<String, String> map = new HashMap<>();
+        int result = doctorService.updateDoctor(doctor);
+        if (result == 1) {
+            map.put("message", "Doctor updated");
+            return ResponseEntity.ok(map);
+        } else if (result == -1) {
+            map.put("message", "Doctor not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map);
+        }
+        map.put("message", "Some internal error occurred");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+    }
+
+    @DeleteMapping("/{id}/{token}")
+    public ResponseEntity<Map<String, String>> deleteDoctor(
+            @PathVariable long id,
+            @PathVariable String token) {
+        ResponseEntity<Map<String, String>> validationResponse = service.validateToken(token, "admin");
+        if (!validationResponse.getStatusCode().equals(HttpStatus.OK)) {
+            return validationResponse;
+        }
+
+        Map<String, String> map = new HashMap<>();
+        int result = doctorService.deleteDoctor(id);
+        if (result == 1) {
+            map.put("message", "Doctor deleted successfully");
+            return ResponseEntity.ok(map);
+        } else if (result == -1) {
+            map.put("message", "Doctor not found with id");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map);
+        }
+        map.put("message", "Some internal error occurred");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+    }
+
+    @GetMapping("/filter/{name}/{time}/{speciality}")
+    public ResponseEntity<Map<String, Object>> filter(
+            @PathVariable String name,
+            @PathVariable String time,
+            @PathVariable String speciality) {
+        return ResponseEntity.ok(service.filterDoctor(name, speciality, time));
+    }
+
 // 1. Set Up the Controller Class:
-//    - Annotate the class with `@RestController` to define it as a REST controller that serves JSON responses.
-//    - Use `@RequestMapping("${api.path}doctor")` to prefix all endpoints with a configurable API path followed by "doctor".
 //    - This class manages doctor-related functionalities such as registration, login, updates, and availability.
 
 
@@ -56,6 +187,5 @@ public class DoctorController {
 //    - Handles HTTP GET requests to filter doctors based on name, time, and specialty.
 //    - Accepts `name`, `time`, and `speciality` as path variables.
 //    - Calls the shared `Service` to perform filtering logic and returns matching doctors in the response.
-
 
 }
