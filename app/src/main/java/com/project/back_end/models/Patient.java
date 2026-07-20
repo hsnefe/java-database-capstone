@@ -24,6 +24,9 @@ public class Patient {
     @NotNull(message = "Address cannot be null")
     @Size(max = 255, message = "Address must be less than 255 characters")
     private String address;
+
+    protected Patient() {}
+
     public Patient(Long id, String name, String email, String password, String phone, String address){
         this.id = id;
         this.name = name;

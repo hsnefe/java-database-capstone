@@ -18,6 +18,9 @@ private Long id;
 private String username;
 @NotNull(message = "Password cannot be null")
 private String password;
+
+protected Admin() {}
+
 public Admin(Long id, String username, String password){
     this.id = id;
     this.username = username;

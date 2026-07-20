@@ -23,10 +23,10 @@ private LocalDateTime appointmentTime;
 @NotNull(message = "Status cannot be null")
 @Min(value = 0, message = "Status must be 0 or 1")
 @Max(value = 1, message = "Status must be 0 or 1")
-private LocalDateTime endTime;
-private LocalDate appointmentDate;
-private LocalTime appointmentTimeOnly;
 private int status;
+
+protected Appointment() {}
+
 public Appointment(Long id, Doctor doctor, Patient patient, LocalDateTime appointmentTime, int status){
     this.id = id;
     this.doctor = doctor;
@@ -49,14 +49,17 @@ public LocalDateTime getAppointmentTime(){
 public int getStatus(){
     return status;
 }
+@Transient
 public LocalDateTime getEndTime(){
-    return appointmentTime.plusHours(1);
+    return appointmentTime != null ? appointmentTime.plusHours(1) : null;
 }
+@Transient
 public LocalDate getAppointmentDate(){
-    return appointmentTime.toLocalDate();
+    return appointmentTime != null ? appointmentTime.toLocalDate() : null;
 }
+@Transient
 public LocalTime getAppointmentTimeOnly(){
-    return appointmentTime.toLocalTime();
+    return appointmentTime != null ? appointmentTime.toLocalTime() : null;
 }
 public void setId(Long id){
     this.id = id;
@@ -72,15 +75,6 @@ public void setAppointmentTime(LocalDateTime appointmentTime){
 }
 public void setStatus(int status){
     this.status = status;
-}
-public void setEndTime(LocalDateTime endTime){
-    this.endTime = endTime;
-}
-public void setAppointmentDate(LocalDate appointmentDate){
-    this.appointmentDate = appointmentDate;
-}
-public void setAppointmentTimeOnly(LocalTime appointmentTimeOnly){
-    this.appointmentTimeOnly = appointmentTimeOnly;
 }
   // @Entity annotation:
 //    - Marks the class as a JPA entity, meaning it represents a table in the database.

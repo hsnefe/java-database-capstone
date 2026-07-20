@@ -31,6 +31,9 @@ private String phone;
 @CollectionTable(name = "doctor_available_times", joinColumns = @JoinColumn(name = "doctor_id"))
 @Column(name = "available_time")
 private List<String> availableTimes;
+
+protected Doctor() {}
+
 public Doctor(Long id, String name, String specialty, String email, String password, String phone, List<String> availableTimes){
     this.id = id;
     this.name = name;
